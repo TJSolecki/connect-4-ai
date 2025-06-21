@@ -1,6 +1,6 @@
 import gleam/int
 import lustre
-import lustre/element.{text}
+import lustre/element.{type Element, text}
 import lustre/element/html.{button, div, p}
 import lustre/event.{on_click}
 
@@ -11,28 +11,30 @@ pub fn main() {
   Nil
 }
 
-fn init(_flags) {
+type Model =
+  Int
+
+fn init(_flags) -> Model {
   0
 }
 
 type Msg {
-  Incr
-  Decr
+  UserClickedIncrement
+  UserClickedDecrement
 }
 
-fn update(model, msg) {
-  case msg {
-    Incr -> model + 1
-    Decr -> model - 1
+fn update(model: Model, message: Msg) -> Model {
+  case message {
+    UserClickedIncrement -> model + 1
+    UserClickedDecrement -> model - 1
   }
 }
 
-fn view(model) {
+fn view(model: Model) -> Element(Msg) {
   let count = int.to_string(model)
-
   div([], [
-    button([on_click(Incr)], [text(" + ")]),
+    button([on_click(UserClickedIncrement)], [text("+")]),
     p([], [text(count)]),
-    button([on_click(Decr)], [text(" - ")]),
+    button([on_click(UserClickedDecrement)], [text("-")]),
   ])
 }
