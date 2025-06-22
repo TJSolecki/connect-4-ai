@@ -6,6 +6,7 @@ import lustre/attribute
 import lustre/effect.{type Effect}
 import lustre/element.{type Element, text}
 import lustre/element/html.{button, div, p}
+import lustre/element/keyed
 import lustre/event.{on_click}
 import rsvp
 
@@ -69,14 +70,17 @@ fn view(model: Model) -> Element(Msg) {
       p([], [text(count)]),
       button([on_click(UserClickedRemoveCat)], [text("-")]),
     ]),
-    div(
+    keyed.div(
       [],
       list.map(model.cats, fn(cat) {
-        html.img([
-          attribute.src(cat.url),
-          attribute.height(400),
-          attribute.width(400),
-        ])
+        #(
+          cat.id,
+          html.img([
+            attribute.src(cat.url),
+            attribute.height(400),
+            attribute.width(400),
+          ]),
+        )
       }),
     ),
   ])
