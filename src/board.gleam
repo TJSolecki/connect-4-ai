@@ -12,7 +12,7 @@ pub fn render(board: Board) -> Element(Msg) {
   keyed.div(
     [
       attribute.class("grid gap-[1px]"),
-      attribute.style("grid-template-columns", "repeat(8, min-content)"),
+      attribute.style("grid-template-columns", "repeat(7, min-content)"),
     ],
     list.map(
       dict.to_list(board) |> list.sort(fn(a, b) { int.compare(a.0, b.0) }),
