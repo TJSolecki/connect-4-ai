@@ -41,7 +41,7 @@ fn board_cell(col: Int, row: Int, placed: Int) -> #(String, Element(Msg)) {
         event.on_click(UserClickedColumn(col)),
         attribute.id(key),
         attribute.class(
-          "h-4 w-4 rounded-full "
+          "h-6 w-6 rounded-full "
           <> case placed {
             1 -> "bg-blue-300"
             _ -> "bg-zinc-700"
