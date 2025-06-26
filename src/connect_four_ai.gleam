@@ -7,7 +7,7 @@ import lustre
 import lustre/attribute
 import lustre/element.{type Element}
 import lustre/element/html
-import types.{type Msg, UserClickedColumn}
+import types.{type Board, type Msg, UserClickedColumn}
 
 pub fn main() {
   let app = lustre.simple(init, update, view)
@@ -17,14 +17,14 @@ pub fn main() {
 }
 
 type Model {
-  Model(board: Dict(Int, Dict(Int, Int)))
+  Model(board: Board)
 }
 
 fn init(_flags) -> Model {
   Model(board: create_board())
 }
 
-fn create_board() -> Dict(Int, Dict(Int, Int)) {
+fn create_board() -> Board {
   create_row(create_row(0))
 }
 

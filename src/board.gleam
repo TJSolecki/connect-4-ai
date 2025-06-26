@@ -1,4 +1,4 @@
-import gleam/dict.{type Dict}
+import gleam/dict
 import gleam/int
 import gleam/list
 import lustre/attribute
@@ -6,9 +6,9 @@ import lustre/element.{type Element}
 import lustre/element/html
 import lustre/element/keyed
 import lustre/event
-import types.{type Msg, UserClickedColumn}
+import types.{type Board, type Msg, UserClickedColumn}
 
-pub fn render(board: Dict(Int, Dict(Int, Int))) -> Element(Msg) {
+pub fn render(board: Board) -> Element(Msg) {
   keyed.div(
     [
       attribute.class("grid gap-[1px]"),
