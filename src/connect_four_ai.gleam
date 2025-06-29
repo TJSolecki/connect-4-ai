@@ -24,11 +24,11 @@ fn init(_flags) -> Model {
   Model(board: create_board())
 }
 
-fn create_board() -> Board {
+pub fn create_board() -> Board {
   create_row(create_row(0, 7), 6)
 }
 
-fn create_row(entry: value, count: Int) -> Dict(Int, value) {
+pub fn create_row(entry: value, count: Int) -> Dict(Int, value) {
   dict.from_list(
     list.index_map(list.repeat(entry, count), fn(elem, i) { #(i, elem) }),
   )

@@ -6,3 +6,7 @@ pub type Msg {
 
 pub type Board =
   Dict(Int, Dict(Int, Int))
+
+pub type Bitboard {
+  Bitboard(player_boards: #(Int, Int), counter: Int, heights: Dict(Int, Int))
+}
