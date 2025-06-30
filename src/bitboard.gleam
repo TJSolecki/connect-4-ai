@@ -1,6 +1,7 @@
 import gleam/dict.{type Dict}
 import gleam/int
 import gleam/list
+import gleam/result
 import types.{type Bitboard, type Board}
 
 //                     6 13 20 27 34 41 48
@@ -12,6 +13,38 @@ import types.{type Bitboard, type Board}
 // 5 | . . O X O . .   0  7 14 21 28 35 42
 //     -------------
 //     0 1 2 3 4 5 6
+
+pub fn make_move(bitboard: Bitboard, col: Int) -> Result(Bitboard, Nil) {
+  use height <- result.try(
+    dict.get(bitboard.heights, col) |> fail_if_negative(),
+  )
+  let move = int.bitwise_shift_left(1, height)
+  let heights =
+    bitboard.heights
+    |> dict.insert(col, case height == cordinate_to_lsb(col, 0) {
+      True -> -1
+      False -> height + 1
+    })
+  let player_boards = case int.bitwise_and(bitboard.counter, 1) {
+    1 -> #(
+      bitboard.player_boards.0,
+      int.bitwise_or(bitboard.player_boards.1, move),
+    )
+    _ -> #(
+      int.bitwise_or(bitboard.player_boards.0, move),
+      bitboard.player_boards.1,
+    )
+  }
+  let counter = bitboard.counter + 1
+  Ok(types.Bitboard(player_boards:, counter:, heights:))
+}
+
+fn fail_if_negative(result: Result(Int, Nil)) -> Result(Int, Nil) {
+  case result {
+    Ok(x) if x < 0 -> Error(Nil)
+    _ -> result
+  }
+}
 
 pub fn to_board(bitboard: Bitboard) -> Board {
   dict.combine(

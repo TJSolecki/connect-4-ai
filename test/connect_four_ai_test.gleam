@@ -115,3 +115,24 @@ pub fn max_heights_test() {
       #(6, -1),
     ])
 }
+
+pub fn make_move_test() {
+  let board = connect_four_ai.create_board()
+  let empty_bitboard = bitboard.to_bitboard(board)
+  let assert Ok(after_move) = bitboard.make_move(empty_bitboard, 0)
+  assert dict.get(after_move.heights, 0) == Ok(1)
+  assert after_move.player_boards.0 == 1
+  assert after_move.player_boards.1 == 0
+  assert after_move.counter == 1
+  let assert Ok(after_second_move) = bitboard.make_move(after_move, 0)
+  assert dict.get(after_second_move.heights, 0) == Ok(2)
+  assert after_second_move.player_boards.0 == 1
+  assert after_second_move.player_boards.1 == 2
+  assert after_second_move.counter == 2
+  let assert Ok(after_third_move) = bitboard.make_move(after_second_move, 0)
+  let assert Ok(after_fourth_move) = bitboard.make_move(after_third_move, 0)
+  let assert Ok(after_fifth_move) = bitboard.make_move(after_fourth_move, 0)
+  let assert Ok(after_sixth_move) = bitboard.make_move(after_fifth_move, 0)
+  assert dict.get(after_sixth_move.heights, 0) == Ok(-1)
+  assert bitboard.make_move(after_sixth_move, 0) == Error(Nil)
+}
