@@ -1,6 +1,7 @@
 import bitboard
 import connect_four_ai
 import gleam/dict
+import gleam/result
 import gleeunit
 
 pub fn main() -> Nil {
@@ -135,4 +136,66 @@ pub fn make_move_test() {
   let assert Ok(after_sixth_move) = bitboard.make_move(after_fifth_move, 0)
   assert dict.get(after_sixth_move.heights, 0) == Ok(-1)
   assert bitboard.make_move(after_sixth_move, 0) == Error(Nil)
+}
+
+pub fn is_win_test() {
+  let assert Ok(board) =
+    connect_four_ai.create_board()
+    |> bitboard.to_bitboard()
+    |> Ok()
+    |> result.try(bitboard.make_move(_, 0))
+    |> result.try(bitboard.make_move(_, 1))
+    |> result.try(bitboard.make_move(_, 0))
+    |> result.try(bitboard.make_move(_, 1))
+    |> result.try(bitboard.make_move(_, 0))
+    |> result.try(bitboard.make_move(_, 1))
+  assert bitboard.is_win(board.player_boards.0) == False
+  assert bitboard.is_win(board.player_boards.1) == False
+  // up/down player 1
+  let assert Ok(board) =
+    connect_four_ai.create_board()
+    |> bitboard.to_bitboard()
+    |> Ok()
+    |> result.try(bitboard.make_move(_, 0))
+    |> result.try(bitboard.make_move(_, 1))
+    |> result.try(bitboard.make_move(_, 0))
+    |> result.try(bitboard.make_move(_, 1))
+    |> result.try(bitboard.make_move(_, 0))
+    |> result.try(bitboard.make_move(_, 1))
+    |> result.try(bitboard.make_move(_, 0))
+  assert bitboard.is_win(board.player_boards.0)
+  assert bitboard.is_win(board.player_boards.1) == False
+  // up/down player 2
+  let assert Ok(board) =
+    connect_four_ai.create_board()
+    |> bitboard.to_bitboard()
+    |> Ok()
+    |> result.try(bitboard.make_move(_, 0))
+    |> result.try(bitboard.make_move(_, 1))
+    |> result.try(bitboard.make_move(_, 0))
+    |> result.try(bitboard.make_move(_, 1))
+    |> result.try(bitboard.make_move(_, 0))
+    |> result.try(bitboard.make_move(_, 1))
+    |> result.try(bitboard.make_move(_, 2))
+    |> result.try(bitboard.make_move(_, 1))
+  assert bitboard.is_win(board.player_boards.0) == False
+  assert bitboard.is_win(board.player_boards.1)
+  // diagonal
+  let assert Ok(board) =
+    connect_four_ai.create_board()
+    |> bitboard.to_bitboard()
+    |> Ok()
+    |> result.try(bitboard.make_move(_, 0))
+    |> result.try(bitboard.make_move(_, 1))
+    |> result.try(bitboard.make_move(_, 1))
+    |> result.try(bitboard.make_move(_, 2))
+    |> result.try(bitboard.make_move(_, 2))
+    |> result.try(bitboard.make_move(_, 3))
+    |> result.try(bitboard.make_move(_, 2))
+    |> result.try(bitboard.make_move(_, 3))
+    |> result.try(bitboard.make_move(_, 3))
+    |> result.try(bitboard.make_move(_, 5))
+    |> result.try(bitboard.make_move(_, 3))
+  assert bitboard.is_win(board.player_boards.0)
+  assert bitboard.is_win(board.player_boards.1) == False
 }

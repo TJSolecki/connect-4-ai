@@ -14,6 +14,27 @@ import types.{type Bitboard, type Board}
 //     -------------
 //     0 1 2 3 4 5 6
 
+pub fn is_win(player_bitboard: Int) -> Bool {
+  let directions = [1, 7, 6, 8]
+  list.fold_until(directions, False, fn(_, direction) {
+    let is_four_in_a_row =
+      int.bitwise_and(
+        int.bitwise_and(
+          player_bitboard,
+          int.bitwise_shift_right(player_bitboard, direction),
+        ),
+        int.bitwise_and(
+          int.bitwise_shift_right(player_bitboard, 2 * direction),
+          int.bitwise_shift_right(player_bitboard, 3 * direction),
+        ),
+      )
+    case is_four_in_a_row != 0 {
+      True -> list.Stop(True)
+      False -> list.Continue(False)
+    }
+  })
+}
+
 pub fn make_move(bitboard: Bitboard, col: Int) -> Result(Bitboard, Nil) {
   use height <- result.try(
     dict.get(bitboard.heights, col) |> fail_if_negative(),
