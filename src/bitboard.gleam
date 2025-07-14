@@ -14,6 +14,12 @@ import types.{type Bitboard, type Board}
 //     -------------
 //     0 1 2 3 4 5 6
 
+pub fn list_moves(bitboard: Bitboard) -> List(Int) {
+  bitboard.heights
+  |> dict.filter(fn(_col, height) { height != -1 })
+  |> dict.keys()
+}
+
 pub fn is_win(player_bitboard: Int) -> Bool {
   let directions = [1, 7, 6, 8]
   list.fold_until(directions, False, fn(_, direction) {

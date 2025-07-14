@@ -1,6 +1,7 @@
 import bitboard
 import connect_four_ai
 import gleam/dict
+import gleam/list
 import gleam/result
 import gleeunit
 
@@ -198,4 +199,31 @@ pub fn is_win_test() {
     |> result.try(bitboard.make_move(_, 3))
   assert bitboard.is_win(board.player_boards.0)
   assert bitboard.is_win(board.player_boards.1) == False
+}
+
+pub fn list_moves_test() {
+  let assert Ok(board) =
+    connect_four_ai.create_board()
+    |> bitboard.to_bitboard()
+    |> Ok()
+    |> result.try(bitboard.make_move(_, 0))
+    |> result.try(bitboard.make_move(_, 0))
+    |> result.try(bitboard.make_move(_, 0))
+    |> result.try(bitboard.make_move(_, 0))
+    |> result.try(bitboard.make_move(_, 0))
+    |> result.try(bitboard.make_move(_, 0))
+  assert bitboard.list_moves(board) |> list.contains(0) == False
+  assert bitboard.list_moves(board) |> list.length() == 6
+  let assert Ok(board_with_two_row_filled) =
+    board
+    |> Ok()
+    |> result.try(bitboard.make_move(_, 6))
+    |> result.try(bitboard.make_move(_, 6))
+    |> result.try(bitboard.make_move(_, 6))
+    |> result.try(bitboard.make_move(_, 6))
+    |> result.try(bitboard.make_move(_, 6))
+    |> result.try(bitboard.make_move(_, 6))
+  assert bitboard.list_moves(board_with_two_row_filled) |> list.contains(6)
+    == False
+  assert bitboard.list_moves(board_with_two_row_filled) |> list.length() == 5
 }
