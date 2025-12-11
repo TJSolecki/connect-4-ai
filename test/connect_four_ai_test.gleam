@@ -165,7 +165,11 @@ pub fn is_win_test() {
     |> result.try(bitboard.make_move(_, 1))
     |> result.try(bitboard.make_move(_, 0))
   assert bitboard.is_win(board.player_boards.0)
+  assert bitboard.count_n_sequences_in_a_row(board.player_boards.0, 4) == 1
+  assert bitboard.count_n_sequences_in_a_row(board.player_boards.0, 3) == 2
+  assert bitboard.count_n_sequences_in_a_row(board.player_boards.0, 2) == 3
   assert bitboard.is_win(board.player_boards.1) == False
+  assert bitboard.count_n_sequences_in_a_row(board.player_boards.1, 4) == 0
   // up/down player 2
   let assert Ok(board) =
     connect_four_ai.create_board()
@@ -181,6 +185,8 @@ pub fn is_win_test() {
     |> result.try(bitboard.make_move(_, 1))
   assert bitboard.is_win(board.player_boards.0) == False
   assert bitboard.is_win(board.player_boards.1)
+  assert bitboard.count_n_sequences_in_a_row(board.player_boards.0, 4) == 0
+  assert bitboard.count_n_sequences_in_a_row(board.player_boards.1, 4) == 1
   // diagonal
   let assert Ok(board) =
     connect_four_ai.create_board()
