@@ -54,8 +54,8 @@ fn minimax_helper(
   beta: Int,
   last_move: Int,
 ) -> MoveScore {
-  let us = int.bitwise_and(bitboard.counter, 0)
-  let them = int.bitwise_exclusive_or(us, 1)
+  let us = int.bitwise_and(bitboard.counter, 1)
+  let them = 1 - us
   let our_board = case us {
     0 -> bitboard.player_boards.0
     _ -> bitboard.player_boards.1
@@ -87,18 +87,24 @@ fn minimax_helper(
           fn(best_move_score_with_alpha, move) {
             let assert Ok(bitboard_after_move) = make_move(bitboard, move)
             let move_score =
-              minimax_helper(bitboard_after_move, depth + 1, alpha, beta, move)
+              minimax_helper(
+                bitboard_after_move,
+                depth + 1,
+                best_move_score_with_alpha.alpha,
+                beta,
+                move,
+              )
             let best_score =
               int.max(move_score.score, best_move_score_with_alpha.score)
-            let alpha = int.max(best_move_score_with_alpha.alpha, best_score)
+            let new_alpha =
+              int.max(best_move_score_with_alpha.alpha, best_score)
             let new_best_move_score = case
               best_score == best_move_score_with_alpha.score
             {
               True -> best_move_score_with_alpha
-              False ->
-                MoveScoreWithAlpha(move_score.column, move_score.score, alpha)
+              False -> MoveScoreWithAlpha(move, move_score.score, new_alpha)
             }
-            case beta <= alpha {
+            case beta <= new_best_move_score.alpha {
               True -> list.Stop(new_best_move_score)
               False -> list.Continue(new_best_move_score)
             }
@@ -114,18 +120,23 @@ fn minimax_helper(
           fn(best_move_score_with_beta, move) {
             let assert Ok(bitboard_after_move) = make_move(bitboard, move)
             let move_score =
-              minimax_helper(bitboard_after_move, depth + 1, alpha, beta, move)
+              minimax_helper(
+                bitboard_after_move,
+                depth + 1,
+                alpha,
+                best_move_score_with_beta.beta,
+                move,
+              )
             let best_score =
               int.min(move_score.score, best_move_score_with_beta.score)
-            let beta = int.min(best_move_score_with_beta.beta, best_score)
+            let new_beta = int.min(best_move_score_with_beta.beta, best_score)
             let new_best_move_score = case
               best_score == best_move_score_with_beta.score
             {
               True -> best_move_score_with_beta
-              False ->
-                MoveScoreWithBeta(move_score.column, move_score.score, beta)
+              False -> MoveScoreWithBeta(move, move_score.score, new_beta)
             }
-            case beta <= alpha {
+            case new_best_move_score.beta <= alpha {
               True -> list.Stop(new_best_move_score)
               False -> list.Continue(new_best_move_score)
             }
